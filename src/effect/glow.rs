@@ -8,7 +8,11 @@ pub struct GlowEffect {
 
 impl GlowEffect {
     pub fn new(color: Color, radius: f32, intensity: f32) -> Self {
-        Self { color, radius, intensity }
+        Self {
+            color,
+            radius,
+            intensity,
+        }
     }
 
     pub fn default_green() -> Self {

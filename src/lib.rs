@@ -1,20 +1,20 @@
-pub mod renderer;
-pub mod gpu;
+pub mod buffer;
+pub mod color;
+pub mod effect;
+pub mod error;
+pub mod ffi;
+pub mod font;
 pub mod glyph;
+pub mod gpu;
+pub mod jni;
+pub mod logger;
+pub mod pipeline;
+pub mod platform;
+pub mod renderer;
 pub mod shader;
 pub mod surface;
-pub mod pipeline;
-pub mod buffer;
 pub mod texture;
-pub mod color;
-pub mod font;
-pub mod effect;
-pub mod jni;
-pub mod ffi;
-pub mod error;
-pub mod logger;
 pub mod utils;
-pub mod platform;
 
 use renderer::Renderer;
 use sugarloaf::Sugarloaf;
@@ -49,8 +49,12 @@ impl StardewView {
 
     pub fn present(&mut self) {
         let frame = self.surface.get_current_texture().unwrap();
-        let view = frame.texture.create_view(&wgpu::TextureViewDescriptor::default());
-        let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+        let view = frame
+            .texture
+            .create_view(&wgpu::TextureViewDescriptor::default());
+        let mut encoder = self
+            .device
+            .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
         self.renderer.draw(&mut encoder, &view);
         self.device.queue().submit(Some(encoder.finish()));
         frame.present();

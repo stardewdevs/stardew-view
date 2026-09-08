@@ -1,5 +1,5 @@
-use jni::JNIEnv;
 use jni::objects::JString;
+use jni::JNIEnv;
 use std::ffi::CStr;
 
 pub fn jstring_to_string(env: &JNIEnv, jstr: JString) -> String {

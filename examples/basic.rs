@@ -22,5 +22,8 @@ fn main() {
 
     let renderer = Renderer::default();
     let _ = renderer.draw_grid(&grid, &cursor, &palette);
-    println!("sample: grid {}x{} at cursor ({}, {})", 80, 24, cursor.line, cursor.column);
+    println!(
+        "sample: grid {}x{} at cursor ({}, {})",
+        80, 24, cursor.line, cursor.column
+    );
 }

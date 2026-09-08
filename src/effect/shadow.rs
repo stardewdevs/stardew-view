@@ -9,7 +9,12 @@ pub struct ShadowEffect {
 
 impl ShadowEffect {
     pub fn new(offset: Vec2, blur_radius: f32, color: [f32; 4], spread: f32) -> Self {
-        Self { offset, blur_radius, color, spread }
+        Self {
+            offset,
+            blur_radius,
+            color,
+            spread,
+        }
     }
 
     pub fn default_drop() -> Self {

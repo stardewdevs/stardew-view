@@ -8,16 +8,13 @@ pub extern "C" fn stardew_view_create(width: i32, height: i32) -> *mut std::ffi:
 }
 
 #[no_mangle]
-pub extern "C" fn stardew_view_destroy(_handle: *mut std::ffi::c_void) {
-}
+pub extern "C" fn stardew_view_destroy(_handle: *mut std::ffi::c_void) {}
 
 #[no_mangle]
-pub extern "C" fn stardew_view_render(_handle: *mut std::ffi::c_void) {
-}
+pub extern "C" fn stardew_view_render(_handle: *mut std::ffi::c_void) {}
 
 #[no_mangle]
-pub extern "C" fn stardew_view_resize(_handle: *mut std::ffi::c_void, _width: i32, _height: i32) {
-}
+pub extern "C" fn stardew_view_resize(_handle: *mut std::ffi::c_void, _width: i32, _height: i32) {}
 
 #[no_mangle]
 pub extern "C" fn stardew_view_get_version() -> *const c_char {

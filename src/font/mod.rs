@@ -1,4 +1,4 @@
-use crossfont::{FontDesc, Font};
+use crossfont::{Font, FontDesc};
 use glyphon::FontSystem;
 
 pub struct FontManager {
@@ -10,7 +10,10 @@ impl FontManager {
     pub fn new() -> Self {
         let mut system = FontSystem::new();
         let default_font = FontDesc::new("monospace", 16.0);
-        Self { system, default_font }
+        Self {
+            system,
+            default_font,
+        }
     }
 
     pub fn load(&mut self, desc: FontDesc) {

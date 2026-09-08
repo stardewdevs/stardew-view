@@ -10,11 +10,13 @@ fn bench_matrix(c: &mut Criterion) {
         b.iter(|| black_box(MatrixUtils::orthographic(0.0, 80.0, 0.0, 24.0, 0.0, 1.0)))
     });
     c.bench_function("matrix_look_at", |b| {
-        b.iter(|| black_box(MatrixUtils::look_at(
-            VectorUtils::vec3(0.0, 0.0, 5.0),
-            VectorUtils::vec3(0.0, 0.0, 0.0),
-            VectorUtils::vec3(0.0, 1.0, 0.0),
-        )))
+        b.iter(|| {
+            black_box(MatrixUtils::look_at(
+                VectorUtils::vec3(0.0, 0.0, 5.0),
+                VectorUtils::vec3(0.0, 0.0, 0.0),
+                VectorUtils::vec3(0.0, 1.0, 0.0),
+            ))
+        })
     });
     c.bench_function("matrix_rotation", |b| {
         b.iter(|| black_box(MatrixUtils::rotation_z(black_box(0.5))))

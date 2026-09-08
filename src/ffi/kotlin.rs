@@ -1,6 +1,6 @@
-use jni::JNIEnv;
 use jni::objects::{JClass, JObject, JValue};
 use jni::sys::jlong;
+use jni::JNIEnv;
 
 #[no_mangle]
 pub extern "system" fn Java_io_stardew_view_StardewViewNative_nativeInit(

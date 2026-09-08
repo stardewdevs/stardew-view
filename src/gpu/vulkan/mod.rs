@@ -1,4 +1,4 @@
-use wgpu::{Backends, Instance, Device, Surface, SurfaceConfiguration, Adapter, PowerPreference};
+use wgpu::{Adapter, Backends, Device, Instance, PowerPreference, Surface, SurfaceConfiguration};
 
 pub struct VulkanBackend {
     instance: Instance,

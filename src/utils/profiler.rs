@@ -22,11 +22,14 @@ impl Profiler {
 
     pub fn begin(&mut self, name: &str) {
         self.end_current();
-        let section = self.sections.entry(name.to_string()).or_insert_with(|| ProfilerSection {
-            total: Duration::ZERO,
-            calls: 0,
-            last_start: None,
-        });
+        let section = self
+            .sections
+            .entry(name.to_string())
+            .or_insert_with(|| ProfilerSection {
+                total: Duration::ZERO,
+                calls: 0,
+                last_start: None,
+            });
         section.last_start = Some(Instant::now());
         self.active = Some(name.to_string());
     }

@@ -1,4 +1,4 @@
-use wgpu::{Device, Buffer, BufferUsages, BufferDescriptor};
+use wgpu::{Buffer, BufferDescriptor, BufferUsages, Device};
 
 pub struct VertexBuffer {
     pub buffer: Buffer,
@@ -13,6 +13,9 @@ impl VertexBuffer {
             usage: BufferUsages::VERTEX | BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
-        Self { buffer, size: data.len() as u64 }
+        Self {
+            buffer,
+            size: data.len() as u64,
+        }
     }
 }

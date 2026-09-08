@@ -1,4 +1,4 @@
-use wgpu::{Device, RenderPipeline, RenderPipelineDescriptor, PipelineLayout};
+use wgpu::{Device, PipelineLayout, RenderPipeline, RenderPipelineDescriptor};
 
 pub struct PipelineManager;
 

@@ -1,8 +1,8 @@
+use crate::StardewView;
 use jni::objects::{JClass, JObject};
 use jni::sys::{jint, jlong, jobject};
 use jni::JNIEnv;
 use std::sync::Mutex;
-use crate::StardewView;
 
 lazy_static::lazy_static! {
     static ref VIEW: Mutex<Option<StardewView>> = Mutex::new(None);
@@ -20,7 +20,11 @@ pub extern "system" fn Java_io_stardew_view_StardewViewNative_init(
     let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
     let surface = unsafe { instance.create_surface(surface).unwrap() };
     let backend = crate::gpu::vulkan::VulkanBackend::new(surface, width as u32, height as u32);
-    let view = StardewView::new(backend.device().clone(), backend.surface().clone(), backend.config());
+    let view = StardewView::new(
+        backend.device().clone(),
+        backend.surface().clone(),
+        backend.config(),
+    );
     let mut guard = VIEW.lock().unwrap();
     *guard = Some(view);
     1

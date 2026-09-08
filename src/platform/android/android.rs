@@ -13,6 +13,11 @@ impl AndroidPlatform {
         let surface = unsafe { instance.create_surface(&window).unwrap() };
         let width = window.width();
         let height = window.height();
-        Self { window, surface, width, height }
+        Self {
+            window,
+            surface,
+            width,
+            height,
+        }
     }
 }

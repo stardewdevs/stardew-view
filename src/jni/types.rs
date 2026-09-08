@@ -1,5 +1,5 @@
-use jni::JNIEnv;
 use jni::objects::JObject;
+use jni::JNIEnv;
 
 pub struct TerminalState {
     pub rows: i32,

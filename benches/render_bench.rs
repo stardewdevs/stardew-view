@@ -19,13 +19,19 @@ fn bench_color(c: &mut Criterion) {
     let color = Color::GREEN;
     c.bench_function("color_to_vec4", |b| b.iter(|| black_box(color.to_vec4())));
     let palette = Palette::default();
-    c.bench_function("palette_to_json", |b| b.iter(|| black_box(palette.to_json())));
+    c.bench_function("palette_to_json", |b| {
+        b.iter(|| black_box(palette.to_json()))
+    });
 }
 
 fn bench_effects(c: &mut Criterion) {
     let blur = BlurEffect::new(8.0, 0.9);
-    c.bench_function("blur_kernel_gaussian", |b| b.iter(|| black_box(blur.apply())));
-    c.bench_function("blur_kernel_size", |b| b.iter(|| black_box(blur.get_kernel_size())));
+    c.bench_function("blur_kernel_gaussian", |b| {
+        b.iter(|| black_box(blur.apply()))
+    });
+    c.bench_function("blur_kernel_size", |b| {
+        b.iter(|| black_box(blur.get_kernel_size()))
+    });
 
     let glow = GlowEffect::default_green();
     c.bench_function("glow_color", |b| b.iter(|| black_box(glow.get_color_vec())));

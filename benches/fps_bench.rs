@@ -39,5 +39,10 @@ fn bench_timer_drift(c: &mut Criterion) {
     });
 }
 
-criterion_group!(fps_benches, bench_fps_throughput, bench_math_throughput, bench_timer_drift);
+criterion_group!(
+    fps_benches,
+    bench_fps_throughput,
+    bench_math_throughput,
+    bench_timer_drift
+);
 criterion_main!(fps_benches);

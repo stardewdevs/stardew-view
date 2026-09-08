@@ -1,6 +1,6 @@
-use sugarloaf::Sugarloaf;
-use wgpu::{Device, CommandEncoder, TextureView};
 use alacritty_terminal::Term;
+use sugarloaf::Sugarloaf;
+use wgpu::{CommandEncoder, Device, TextureView};
 
 pub struct Renderer {
     sugarloaf: Sugarloaf,

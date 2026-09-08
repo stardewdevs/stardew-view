@@ -1,4 +1,4 @@
-use wgpu::{Surface, Instance};
+use wgpu::{Instance, Surface};
 
 pub struct WebSurface {
     pub surface: Surface,
@@ -8,7 +8,11 @@ pub struct WebSurface {
 
 impl WebSurface {
     pub fn new(surface: Surface, width: u32, height: u32) -> Self {
-        Self { surface, width, height }
+        Self {
+            surface,
+            width,
+            height,
+        }
     }
 
     pub fn resize(&mut self, width: u32, height: u32) {

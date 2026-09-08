@@ -1,4 +1,4 @@
-use std::time::{Instant, Duration};
+use std::time::{Duration, Instant};
 
 pub struct Timer {
     start: Instant,
@@ -6,7 +6,9 @@ pub struct Timer {
 
 impl Timer {
     pub fn new() -> Self {
-        Self { start: Instant::now() }
+        Self {
+            start: Instant::now(),
+        }
     }
 
     pub fn elapsed(&self) -> Duration {

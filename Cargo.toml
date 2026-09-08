@@ -45,5 +45,5 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 default = ["jni"]
-jni = { version = "0.21", optional = true }
+jni = ["dep:jni"]
 android = ["ndk", "ndk-sys", "glue", "android-activity"]
