@@ -1,60 +1,62 @@
 [package]
-name = "stardew-emulator"
+name = "stardew-view"
 version = "0.30"
 edition = "2021"
 authors = ["Stardewdevs"]
-description = "Terminal emulation engine for Stardew"
+description = "GPU-accelerated renderer for Stardew terminal"
 license = "Apache-2.0"
-repository = "https://github.com/stardewdevs/stardew-emulator"
-homepage = "https://github.com/stardewdevs/stardew-emulator"
-documentation = "https://github.com/stardewdevs/stardew-emulator/docs"
+repository = "https://github.com/stardewdevs/stardew-view"
+homepage = "https://github.com/stardewdevs/stardew-view"
+documentation = "https://github.com/stardewdevs/stardew-view/docs"
 
 [dependencies]
-# Terminal emulation
+# Terminal state types
 alacritty_terminal = "0.25"
-vte = "0.14"
-grid = "0.14"
+stardew-emulator = { path = "../stardew-emulator", optional = true }
 
-# PTY handling
-portable-pty = "0.8"
-rustix = { version = "0.38", features = ["pty", "termios"] }
+# GPU rendering (Sugarloaf)
+sugarloaf = "0.8"
+webgpu = "0.19"
+wgpu = "0.19"
+
+# Font handling
+crossfont = "0.8"
+glyphon = "0.6"
+
+# Math utilities
+glam = "0.29"
+cgmath = "0.18"
 
 # JNI bridge
 jni = "0.21"
 jni-sys = "0.3"
 
-# Asynchronous I/O
-tokio = { version = "1.0", features = ["full"] }
-
 # Error handling
 anyhow = "1.0"
 thiserror = "1.0"
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 toml = "0.8"
 
-# Logging
-log = "0.4"
-env_logger = "0.11"
-
-# Utilities
-crossfont = "0.8"
-unicode-width = "0.2"
-unicode-segmentation = "1.11"
-time = "0.3"
+# Async
+tokio = { version = "1.0", features = ["full"] }
 
 # Android-specific
 [target.'cfg(target_os = "android")'.dependencies]
 ndk = "0.9"
 ndk-sys = "0.6"
 glue = "0.3"
+android-activity = "0.5"
 
 [dev-dependencies]
 tempfile = "3"
 criterion = "0.5"
-rand = "0.8"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -62,4 +64,4 @@ crate-type = ["cdylib", "rlib"]
 [features]
 default = ["jni"]
 jni = ["dep:jni"]
-android = ["ndk", "ndk-sys"]
+android = ["ndk", "ndk-sys", "android-activity"]
