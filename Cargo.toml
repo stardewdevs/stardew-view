@@ -19,8 +19,8 @@ crossfont = "0.8"
 glyphon = "0.6"
 glam = "0.29"
 cgmath = "0.18"
-jni = "0.21"
-jni-sys = "0.3"
+jni = { version = "0.21", optional = true }
+jni-sys = { version = "0.3", optional = true }
 anyhow = "1.0"
 thiserror = "1.0"
 log = "0.4"
@@ -45,5 +45,5 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 default = ["jni"]
-jni = ["dep:jni"]
+jni = { version = "0.21", optional = true }
 android = ["ndk", "ndk-sys", "glue", "android-activity"]
