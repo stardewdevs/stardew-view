@@ -11,7 +11,7 @@ documentation = "https://github.com/stardewdevs/stardew-view/docs"
 
 [dependencies]
 alacritty_terminal = "0.25"
-stardew-emulator = { path = "../stardew-emulator", optional = true }
+stardew-emulator = { git = "https://github.com/stardewdevs/stardew-emulator", optional = true }
 sugarloaf = "0.8"
 webgpu = "0.19"
 wgpu = "0.19"
