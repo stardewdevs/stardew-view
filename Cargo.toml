@@ -15,7 +15,7 @@ stardew-emulator = { git = "https://github.com/stardewdevs/stardew-emulator", op
 sugarloaf = "0.5.27"
 webgpu = "0.0.1"
 wgpu = "0.19"
-crossfont = "0.8"
+crossfont = "0.9"
 glyphon = "0.6"
 glam = "0.29"
 cgmath = "0.18"
