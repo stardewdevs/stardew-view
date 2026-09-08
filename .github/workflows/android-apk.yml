@@ -41,7 +41,7 @@ jobs:
           if [ -f gradlew ]; then ./gradlew assembleRelease; fi
           cd ..
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stardew-view.apk
           path: android/app/build/outputs/apk/release/*.apk

@@ -31,7 +31,7 @@ jobs:
       - name: Build
         run: cargo ndk -t ${{ matrix.target }} build --release
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: libstardew_view-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/libstardew_view.so

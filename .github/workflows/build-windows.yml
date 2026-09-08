@@ -21,7 +21,7 @@ jobs:
       - name: Test
         run: cargo test --target x86_64-pc-windows-msvc
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stardew-view-x86_64-pc-windows-msvc
           path: target/x86_64-pc-windows-msvc/release/stardew_view.dll

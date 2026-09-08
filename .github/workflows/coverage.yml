@@ -30,7 +30,7 @@ jobs:
           grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --ignore "target/**" -o target/coverage
           grcov . --binary-path ./target/debug/ -s . -t json --branch --ignore-not-existing --ignore "target/**" -o target/coverage.json
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: target/coverage
