@@ -13,7 +13,7 @@ documentation = "https://github.com/stardewdevs/stardew-view/docs"
 alacritty_terminal = "0.25"
 stardew-emulator = { git = "https://github.com/stardewdevs/stardew-emulator", optional = true }
 sugarloaf = "0.5.27"
-webgpu = "0.19"
+webgpu = "0.0.1"
 wgpu = "0.19"
 crossfont = "0.8"
 glyphon = "0.6"
