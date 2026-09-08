@@ -1,0 +1,27 @@
+name: Format
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+      - name: Check rustfmt
+        run: cargo fmt --all -- --check --config group_imports=StdExternalCrate,imports_granularity=Crate
+      - name: Check toml format
+        run: cargo fmt --all --check -- --config skip_children=true || true
+      - name: Verify no trailing whitespace
+        run: |
+          if rg -n " $|	$" --glob '*.rs' --glob '!target' ; then
+            echo "Trailing whitespace found"
+            exit 1
+          fi

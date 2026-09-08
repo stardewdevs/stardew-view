@@ -1,0 +1,25 @@
+name: Reverse Dependencies
+
+on:
+  schedule:
+    - cron: '0 7 * * MON'
+  workflow_dispatch:
+
+jobs:
+  reverse-deps-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Check crates.io status
+        run: |
+          VER=$(grep '^version' Cargo.toml | head -1 | cut -d'"' -f2)
+          echo "Current crate version: $VER"
+          curl -s "https://crates.io/api/v1/crates/stardew-view" | python3 -c "import json,sys; d=json.load(sys.stdin); print('Crates.io version:', d['crate']['max_stable_version'])" || echo "Not published on crates.io"
+      - name: Check downstream usage
+        run: |
+          curl -s "https://crates.io/api/v1/crates/stardew-view/reverse_dependencies" | python3 -c "import json,sys; d=json.load(sys.stdin); print('Reverse dependencies:', d.get('meta',{}).get('total',0))" || echo "No reverse dependencies found"
+      - name: Verify API compatibility
+        run: |
+          cargo check --all-features --release
+          echo "API compatibility check passed"

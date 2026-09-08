@@ -1,0 +1,12 @@
+{
+  "name": "terminal-shadow",
+  "type": "glyph",
+  "params": {
+    "offset": [2.0, 2.0],
+    "blur_radius": 4.0,
+    "color": [0.0, 0.0, 0.0, 0.35],
+    "spread": 0.0
+  },
+  "enabled": false,
+  "priority": 30
+}

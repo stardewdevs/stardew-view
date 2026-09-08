@@ -1,0 +1,31 @@
+name: WASM Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Install wasm-bindgen
+        run: cargo install wasm-bindgen-cli --locked
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --locked
+      - name: Build WASM package
+        run: wasm-pack build --target web --out-dir target/wasm
+      - name: Verify wasm output
+        run: |
+          ls -la target/wasm
+      - name: Upload wasm artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stardew-view-wasm
+          path: target/wasm

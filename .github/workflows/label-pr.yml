@@ -1,0 +1,42 @@
+name: Label PR
+
+on:
+  pull_request_target:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          sync-labels: true
+      - name: Auto-label by title
+        uses: step-security/auto-label@v1
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add size label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo, number } = context.issue;
+            const { data: files } = await github.rest.pulls.listFiles({ owner, repo, pull_number: number });
+            const additions = files.reduce((s, f) => s + f.additions, 0);
+            const deletions = files.reduce((s, f) => s + f.deletions, 0);
+            const size = additions + deletions;
+            let label = 'size/xl';
+            if (size < 10) label = 'size/xs';
+            else if (size < 50) label = 'size/s';
+            else if (size < 200) label = 'size/m';
+            else if (size < 1000) label = 'size/l';
+            await github.rest.issues.addLabels({ owner, repo, issue_number: number, labels: [label] });
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: number,
+              body: `PR size: ${additions} additions, ${deletions} deletions` 
+            });

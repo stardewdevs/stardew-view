@@ -1,0 +1,14 @@
+{
+  "name": "stardew-classic",
+  "version": 1,
+  "foreground": "#f8f8f0ff",
+  "background": "#272822ff",
+  "cursor": "#f8f8f0ff",
+  "selection": "#49483eff",
+  "palette": [
+    "#272822ff", "#f92672ff", "#a6e22eff", "#f4bf75ff",
+    "#66d9efff", "#ae81ffff", "#a1efe4ff", "#f8f8f2ff",
+    "#75715eff", "#f92672ff", "#a6e22eff", "#f4bf75ff",
+    "#66d9efff", "#ae81ffff", "#a1efe4ff", "#f9f8f5ff"
+  ]
+}

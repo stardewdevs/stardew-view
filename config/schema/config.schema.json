@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Stardew View Config",
+  "description": "Root configuration file for stardew-view",
+  "type": "object",
+  "properties": {
+    "theme": { "$ref": "theme.schema.json" },
+    "effects": {
+      "type": "array",
+      "items": { "$ref": "effect.schema.json" }
+    },
+    "fonts": {
+      "type": "object",
+      "properties": {
+        "default": { "type": "string" },
+        "size": { "type": "number", "minimum": 4.0, "maximum": 72.0 }
+      }
+    },
+    "renderer": {
+      "type": "object",
+      "properties": {
+        "backend": { "enum": ["vulkan", "webgpu", "opengl", "metal", "auto"] },
+        "present_mode": { "enum": ["fifo", "mailbox", "immediate"] }
+      }
+    }
+  },
+  "required": ["theme"]
+}

@@ -1,0 +1,57 @@
+name: Shader Compile
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'shaders/**'
+      - 'src/shader/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'shaders/**'
+      - 'src/shader/**'
+  workflow_dispatch:
+
+jobs:
+  wgsl-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install naga
+        run: cargo install naga-cli --locked
+      - name: Validate WGSL shaders
+        run: |
+          for f in shaders/wgsl/*.wgsl; do
+            echo "Validating $f"
+            naga "$f" shaders/spv/$(basename "$f" .wgsl).spv
+          done
+      - name: Validate shader bindings
+        run: |
+          for f in shaders/wgsl/*.wgsl; do
+            naga "$f" shaders/wgsl/$(basename "$f" .wgsl)_validated.wgsl || exit 1
+          done
+
+  spirv-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SPIRV-Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y spirv-tools glslang-tools
+      - name: Compile GLSL to SPIR-V
+        run: |
+          mkdir -p shaders/spv
+          for f in shaders/glsl/*.frag; do
+            glslangValidator -V "$f" -o "shaders/spv/$(basename "$f" .frag)_frag.spv"
+          done
+          for f in shaders/glsl/*.vert; do
+            glslangValidator -V "$f" -o "shaders/spv/$(basename "$f" .vert)_vert.spv"
+          done
+      - name: Verify SPIR-V disassembly
+        run: |
+          for f in shaders/spv/*.spv; do
+            spirv-dis "$f" > /dev/null || exit 1
+          done

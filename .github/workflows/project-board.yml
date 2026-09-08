@@ -1,0 +1,41 @@
+name: Project Board
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  update-projects:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add PR to project board
+        uses: srggrs/assign-one-project-github-action@1.2.1
+        continue-on-error: true
+        with:
+          project: 'https://github.com/orgs/stardewdevs-projects/projects'
+          column_name: 'In Progress'
+      - name: Add issue to project board
+        uses: srggrs/assign-one-project-github-action@1.2.1
+        continue-on-error: true
+        with:
+          project: 'https://github.com/orgs/stardewdevs-projects/projects'
+          column_name: 'Backlog'
+
+  stale-management:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 14
+          stale-issue-label: 'stale'
+          stale-pr-label: 'stale'
+          exempt-pr-labels: 'dependencies,security'
+          stale-issue-message: 'This issue has been inactive for 60 days. Marking as stale.'
+          stale-pr-message: 'This PR has been inactive for 60 days. Marking as stale.'
+          close-issue-message: 'Closing stale issue without activity.'
+          close-pr-message: 'Closing stale PR without activity.'
+          operations-per-run: 100

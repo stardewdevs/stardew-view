@@ -1,0 +1,28 @@
+name: Semver Check
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  semver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-semver-checks
+        run: cargo install cargo-semver-checks --locked
+      - name: Compare against previous release
+        run: |
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | head -1)
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "No previous tag found, skipping semver check"
+            exit 0
+          fi
+          cargo semver-checks --release-type minor --baseline-version $PREVIOUS_TAG || exit 1
+      - name: Check API surface changes
+        run: |
+          cargo public-api 2>/dev/null || cargo +nightly public-api 2>/dev/null || echo "cargo-public-api not available, skipping"

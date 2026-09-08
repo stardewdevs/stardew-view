@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Theme",
+  "description": "Stardew View terminal color theme",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "foreground": { "$ref": "#/definitions/color" },
+    "background": { "$ref": "#/definitions/color" },
+    "cursor": { "$ref": "#/definitions/color" },
+    "selection": { "$ref": "#/definitions/color" },
+    "palette": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/color" },
+      "minItems": 16,
+      "maxItems": 256
+    }
+  },
+  "required": ["name", "foreground", "background", "cursor", "selection"],
+  "definitions": {
+    "color": {
+      "oneOf": [
+        { "type": "string", "pattern": "^#[0-9a-fA-F]{8}$" },
+        { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+        {
+          "type": "array",
+          "items": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+          "minItems": 4,
+          "maxItems": 4
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+name: MSRV
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  msrv:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [1.75.0, 1.76.0, 1.77.0, 1.78.0]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@${{ matrix.rust }}
+      - name: Build with MSRV ${{ matrix.rust }}
+        run: cargo build --no-default-features
+      - name: Test with MSRV ${{ matrix.rust }}
+        run: cargo test --no-default-features --lib
+
+  current-msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-msrv
+        run: cargo install cargo-msrv --locked
+      - name: Verify minimum version
+        run: cargo msrv verify

@@ -1,0 +1,46 @@
+name: Draft Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 0.31)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Is this a prerelease?'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify version in Cargo.toml
+        run: |
+          CARGO_VERSION=$(grep '^version' Cargo.toml | head -1 | cut -d'"' -f2)
+          echo "Cargo.toml version: $CARGO_VERSION"
+          echo "Requested version: ${{ github.event.inputs.version }}"
+          if [ "$CARGO_VERSION" != "${{ github.event.inputs.version }}" ]; then
+            echo "Version mismatch between Cargo.toml and requested version"
+          fi
+      - name: Verify tag does not exist
+        run: |
+          TAG="v${{ github.event.inputs.version }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists"
+            exit 1
+          fi
+          echo "Tag $TAG is available"
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: v${{ github.event.inputs.version }}
+          draft: true
+          prerelease: ${{ github.event.inputs.prerelease }}
+          generate_release_notes: true

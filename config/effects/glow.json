@@ -1,0 +1,11 @@
+{
+  "name": "terminal-glow",
+  "type": "screen",
+  "params": {
+    "color": [0.0, 1.0, 0.0, 0.8],
+    "radius": 4.0,
+    "intensity": 0.6
+  },
+  "enabled": false,
+  "priority": 20
+}

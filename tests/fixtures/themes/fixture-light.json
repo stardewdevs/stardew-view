@@ -1,0 +1,14 @@
+{
+  "name": "fixture-light",
+  "version": 1,
+  "foreground": "#2e2e2eff",
+  "background": "#fbf7e9ff",
+  "cursor": "#007f46ff",
+  "selection": "#b5dce1ff",
+  "palette": [
+    "#2e2e2eff", "#ab4642ff", "#7c7c2aff", "#a58800ff",
+    "#325d88ff", "#7c4d91ff", "#30748aff", "#a8a19fff",
+    "#5c6370ff", "#ab4642ff", "#7c7c2aff", "#a58800ff",
+    "#325d88ff", "#7c4d91ff", "#30748aff", "#fbf7e9ff"
+  ]
+}

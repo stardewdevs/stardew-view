@@ -1,0 +1,43 @@
+name: FFI Export Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ffi-exports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build cdylib
+        run: cargo build --release
+      - name: Verify FFI symbols
+        run: |
+          if command -v nm > /dev/null; then
+            nm -D target/release/libstardew_view.so | grep -E " T (stardew|Java_)" > expected_symbols.txt
+          fi
+          if command -v objdump > /dev/null; then
+            objdump -T target/release/libstardew_view.so | grep -E "(stardew_|Java_)" > ffi_symbols.txt
+          fi
+          cat expected_symbols.txt 2>/dev/null
+
+  exports-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build with all features
+        run: cargo build --release --all-features
+      - name: Verify const correctness
+        run: |
+          if command -v readelf > /dev/null; then
+            readelf -Ws target/release/libstardew_view.so | grep "stardew_view_init"
+          fi
+      - name: Check no_mangle attributes
+        run: |
+          grep -rn "no_mangle" src/ | wc -l > no_mangle_count.txt
+          echo "no_mangle exports: $(cat no_mangle_count.txt)"

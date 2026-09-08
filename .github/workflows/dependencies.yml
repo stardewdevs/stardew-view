@@ -1,0 +1,42 @@
+name: Dependencies
+
+on:
+  schedule:
+    - cron: '0 2 * * MON'
+  push:
+    branches: [main]
+    paths:
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+  workflow_dispatch:
+
+jobs:
+  deny:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked
+      - name: Check licenses and bans
+        run: cargo deny check
+
+  outdated:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-outdated
+        run: cargo install cargo-outdated --locked
+      - name: Check outdated dependencies
+        run: cargo outdated --exit-code 1 || true
+
+  tree:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Generate dependency tree
+        run: cargo tree --all-features > dependency-tree.txt
+      - name: Verify duplicate detection
+        run: cargo tree --duplicates

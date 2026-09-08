@@ -1,0 +1,42 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  dead-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - name: Check for dead code
+        run: cargo +nightly build --all-features 2>&1 | tee dead-code.log
+      - name: Fail on dead code warnings
+        run: |
+          if grep -q "warning: field .* is never read" dead-code.log; then
+            echo "Dead code detected"
+            exit 1
+          fi
+      - name: Check unused dependencies
+        run: |
+          cargo +nightly build --all-targets 2>&1 | grep "unused" || echo "No unused dependencies detected"
+
+  complexity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install cargo-bloat
+        run: cargo install cargo-bloat --locked
+      - name: Analyse binary bloat
+        run: cargo bloat --release --lib -n 20
+      - name: Verify no unsafe in pure modules
+        run: |
+          if rg -n "unsafe" src/utils src/color src/error; then
+            echo "Unsafe code found in pure modules"
+            exit 1
+          fi

@@ -1,0 +1,37 @@
+name: Build Android
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android, i686-linux-android]
+    env:
+      NDK_VERSION: r27
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: stable/install-cargo-ndk@v1
+      - name: Install Android NDK
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk
+          wget -q https://dl.google.com/android/repository/android-ndk-$NDK_VERSION-linux.zip
+          unzip -q android-ndk-$NDK_VERSION-linux.zip
+          mv android-ndk-$NDK_VERSION $ANDROID_HOME/ndk/$NDK_VERSION
+      - name: Build
+        run: cargo ndk -t ${{ matrix.target }} build --release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: libstardew_view-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/libstardew_view.so

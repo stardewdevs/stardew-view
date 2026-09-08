@@ -1,0 +1,23 @@
+name: Performance Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'benches/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  performance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Run criterion benchmarks
+        run: cargo bench --bench render --bench utils
+      - name: Run with baseline
+        run: cargo bench --bench render -- --baseline main

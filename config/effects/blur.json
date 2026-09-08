@@ -1,0 +1,10 @@
+{
+  "name": "terminal-blur",
+  "type": "screen",
+  "params": {
+    "radius": 4.0,
+    "intensity": 0.5
+  },
+  "enabled": false,
+  "priority": 10
+}

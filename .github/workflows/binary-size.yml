@@ -1,0 +1,41 @@
+name: Binary Size
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  size-tracking:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build release
+        run: cargo build --release
+      - name: Measure library size
+        run: |
+          SIZE=$(stat -c %s target/release/libstardew_view.so)
+          echo "Library size: $SIZE bytes"
+          echo "size=$SIZE" >> "$GITHUB_ENV"
+      - name: Install cargo-bloat
+        run: cargo install cargo-bloat --locked
+      - name: Analyse size by function
+        run: |
+          cargo bloat --release --lib -n 30 > bloat_report.txt
+          cat bloat_report.txt
+      - name: Check size regression
+        run: |
+          MAX_SIZE=15000000
+          if [ "${{ env.size }}" -gt "$MAX_SIZE" ]; then
+            echo "Library exceeds maximum size of $MAX_SIZE bytes"
+            exit 1
+          fi
+      - name: Upload size report
+        uses: actions/upload-artifact@v4
+        with:
+          name: size-report
+          path: bloat_report.txt

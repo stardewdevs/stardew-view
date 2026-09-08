@@ -1,0 +1,33 @@
+name: Benchmark
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  benchmark-compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Run benchmarks on PR head
+        run: cargo bench --bench render --bench utils -- --save-baseline head
+      - name: Fetch base branch
+        run: |
+          git fetch origin main
+          git checkout -b base origin/main || git checkout main
+      - name: Run benchmarks on base
+        run: cargo bench --bench render --bench utils -- --save-baseline base
+      - name: Compare baselines
+        run: |
+          cargo install --locked cargo-criterion || true
+          cargo bench --bench render --bench utils -- --baseline base --baseline head
+      - name: Report results
+        run: |
+          cargo bench --bench render --bench utils -- --baseline base --baseline head --plotting-backend plotters 2>&1 | tail -60

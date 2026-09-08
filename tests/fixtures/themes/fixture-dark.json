@@ -1,0 +1,14 @@
+{
+  "name": "fixture-dark",
+  "version": 1,
+  "foreground": "#e0e0e0ff",
+  "background": "#101012ff",
+  "cursor": "#00ff66ff",
+  "selection": "#264f78ff",
+  "palette": [
+    "#000000ff", "#cc5555ff", "#55cc55ff", "#cdcd55ff",
+    "#5555ccff", "#cc55ccff", "#55cdcdff", "#cdcdcdff",
+    "#555555ff", "#ff5555ff", "#55ff55ff", "#ffff55ff",
+    "#5555ffff", "#ff55ffff", "#55ffffff", "#ffffffff"
+  ]
+}

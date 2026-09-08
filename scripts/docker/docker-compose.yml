@@ -1,0 +1,20 @@
+services:
+  build:
+    build:
+      context: ../..
+      dockerfile: scripts/docker/Dockerfile
+    volumes:
+      - ../../target:/app/target
+      - ../../config:/config:ro
+    environment:
+      RUST_BACKTRACE: "1"
+
+  android:
+    build:
+      context: ../..
+      dockerfile: scripts/docker/Dockerfile.android
+    volumes:
+      - ../../target:/app/target
+      - ../../android/libs:/app/android/libs
+    environment:
+      RUST_BACKTRACE: "1"

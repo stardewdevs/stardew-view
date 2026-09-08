@@ -1,0 +1,47 @@
+name: Android APK
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    env:
+      NDK_VERSION: r27
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android, i686-linux-android
+      - uses: stable/install-cargo-ndk@v1
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install Android NDK
+        run: |
+          wget -q https://dl.google.com/android/repository/android-ndk-$NDK_VERSION-linux.zip
+          unzip -q android-ndk-$NDK_VERSION-linux.zip
+          sudo mv android-ndk-$NDK_VERSION /opt/android-ndk
+      - name: Build all ABIs
+        run: cargo ndk -t arm64-v8a -t armeabi-v7a -t x86 -t x86_64 build --release
+      - name: Copy libraries to android libs
+        run: |
+          mkdir -p android/libs/arm64-v8a android/libs/armeabi-v7a android/libs/x86 android/libs/x86_64
+          cp target/aarch64-linux-android/release/libstardew_view.so android/libs/arm64-v8a/
+          cp target/armv7-linux-androideabi/release/libstardew_view.so android/libs/armeabi-v7a/
+          cp target/x86_64-linux-android/release/libstardew_view.so android/libs/x86_64/
+          cp target/i686-linux-android/release/libstardew_view.so android/libs/x86/
+      - name: Build APK
+        run: |
+          cd android
+          if [ -f gradlew ]; then ./gradlew assembleRelease; fi
+          cd ..
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: stardew-view.apk
+          path: android/app/build/outputs/apk/release/*.apk

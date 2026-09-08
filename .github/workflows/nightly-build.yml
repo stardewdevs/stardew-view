@@ -1,0 +1,22 @@
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+      - uses: Swatinem/rust-cache@v2
+      - name: Build with nightly
+        run: cargo +nightly build --all-features
+      - name: Test with nightly
+        run: cargo +nightly test --all-features
+      - name: Clippy with nightly
+        run: cargo +nightly clippy --all-features -- -D warnings
+      - name: Build benchmarks
+        run: cargo +nightly bench --no-run

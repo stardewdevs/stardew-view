@@ -1,0 +1,30 @@
+name: Test Matrix
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  matrix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        channel: [stable, beta, nightly]
+        features: ['', '--all-features']
+        exclude:
+          - os: windows-latest
+            channel: nightly
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@${{ matrix.channel }}
+      - uses: Swatinem/rust-cache@v2
+      - name: Build
+        run: cargo build ${{ matrix.features }}
+      - name: Test
+        run: cargo test ${{ matrix.features }}
+      - name: Clippy
+        if: ${{ matrix.channel == 'stable' }}
+        run: cargo clippy --all-targets -D warnings

@@ -1,0 +1,34 @@
+name: Unit Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Run unit tests
+        run: cargo test --lib
+      - name: Run tests with all features
+        run: cargo test --lib --all-features
+      - name: Run doctests
+        run: cargo test --doc --all-features
+      - name: Test release profile
+        run: cargo test --release --lib
+
+  unit-tests-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Build for wasm
+        run: cargo build --target wasm32-unknown-unknown --lib

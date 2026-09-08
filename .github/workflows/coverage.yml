@@ -1,0 +1,42 @@
+name: Coverage
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
+      - name: Install grcov
+        run: |
+          cargo install grcov --locked
+          rustup component add llvm-tools-preview
+      - name: Collect coverage
+        env:
+          LLVM_PROFILE_FILE: stardew-view-%p-%m.profraw
+          RUSTFLAGS: -Cinstrument-coverage
+        run: cargo test --all-features
+      - name: Generate coverage report
+        run: |
+          grcov . --binary-path ./target/debug/ -s . -t html --branch --ignore-not-existing --ignore "target/**" -o target/coverage
+          grcov . --binary-path ./target/debug/ -s . -t json --branch --ignore-not-existing --ignore "target/**" -o target/coverage.json
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: target/coverage
+      - name: Post coverage summary
+        run: |
+          COVERAGE=$(cat target/coverage.json | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('percent_covered','unknown'))")
+          echo "Coverage: $COVERAGE%"
+          echo "coverage=$COVERAGE" >> "$GITHUB_OUTPUT"
+        id: cov
