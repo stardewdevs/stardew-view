@@ -1,6 +1,6 @@
 [package]
 name = "stardew-view"
-version = "0.30"
+version = "0.30.0"
 edition = "2021"
 authors = ["Stardewdevs"]
 description = "GPU-accelerated renderer for Stardew terminal"
