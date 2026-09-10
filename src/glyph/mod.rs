@@ -7,8 +7,11 @@ pub struct GlyphCache {
 
 impl GlyphCache {
     pub fn new() -> Self {
+        let mut font_system = FontSystem::new();
+        #[cfg(target_os = "android")]
+        font_system.db_mut().load_fonts_dir("/system/fonts");
         Self {
-            font_system: FontSystem::new(),
+            font_system,
             swash_cache: SwashCache::new(),
         }
     }
