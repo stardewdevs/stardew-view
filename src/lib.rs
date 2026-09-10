@@ -1,44 +1,51 @@
-pub mod buffer;
-pub mod color;
-pub mod effect;
-pub mod error;
-pub mod ffi;
-pub mod font;
-pub mod glyph;
-pub mod gpu;
-pub mod jni;
-pub mod logger;
-pub mod pipeline;
-pub mod platform;
 pub mod renderer;
+pub mod gpu;
+pub mod glyph;
 pub mod shader;
 pub mod surface;
+pub mod pipeline;
+pub mod buffer;
 pub mod texture;
+pub mod color;
+pub mod font;
+pub mod effect;
+pub mod error;
+pub mod logger;
 pub mod utils;
+pub mod platform;
+
+#[cfg(feature = "jni")]
+pub mod jni;
 
 use renderer::Renderer;
-use sugarloaf::Sugarloaf;
-use wgpu::Device;
+use wgpu::{Device, Queue, Surface, SurfaceConfiguration};
 
 pub struct StardewView {
     renderer: Renderer,
     device: Device,
-    surface: wgpu::Surface,
-    config: wgpu::SurfaceConfiguration,
+    queue: Queue,
+    surface: Surface<'static>,
+    config: SurfaceConfiguration,
 }
 
 impl StardewView {
-    pub fn new(device: Device, surface: wgpu::Surface, config: wgpu::SurfaceConfiguration) -> Self {
+    pub fn new(
+        device: Device,
+        queue: Queue,
+        surface: Surface<'static>,
+        config: SurfaceConfiguration,
+    ) -> Self {
         Self {
-            renderer: Renderer::new(device.clone()),
+            renderer: Renderer::new(&device, &queue),
             device,
+            queue,
             surface,
             config,
         }
     }
 
-    pub fn render(&mut self, terminal_state: &alacritty_terminal::Term) {
-        self.renderer.render(terminal_state);
+    pub fn render(&mut self, terminal: &alacritty_terminal::Term<()>) {
+        self.renderer.render(terminal);
     }
 
     pub fn resize(&mut self, width: u32, height: u32) {
@@ -49,14 +56,10 @@ impl StardewView {
 
     pub fn present(&mut self) {
         let frame = self.surface.get_current_texture().unwrap();
-        let view = frame
-            .texture
-            .create_view(&wgpu::TextureViewDescriptor::default());
-        let mut encoder = self
-            .device
-            .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+        let view = frame.texture.create_view(&wgpu::TextureViewDescriptor::default());
+        let mut encoder = self.device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
         self.renderer.draw(&mut encoder, &view);
-        self.device.queue().submit(Some(encoder.finish()));
+        self.queue.submit(Some(encoder.finish()));
         frame.present();
     }
 }
