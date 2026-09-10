@@ -28,7 +28,7 @@ jobs:
       - name: Build with cross
         run: cross build --target ${{ matrix.target }} --release --no-default-features
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stardew-view-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/*.a

@@ -24,7 +24,7 @@ jobs:
       - name: Test
         run: cargo test --target ${{ matrix.target }}
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: stardew-view-${{ matrix.target }}
           path: target/${{ matrix.target }}/release/libstardew_view.dylib
