@@ -1,5 +1,5 @@
+use stardew_emulator::TerminalSnapshot;
 use wgpu::{CommandEncoder, Device, Queue, TextureView};
-use alacritty_terminal::Term;
 
 pub struct Renderer;
 
@@ -8,7 +8,7 @@ impl Renderer {
         Self
     }
 
-    pub fn render(&mut self, _terminal: &Term<()>) {}
+    pub fn render(&mut self, _snapshot: &TerminalSnapshot) {}
 
     pub fn draw(&mut self, _encoder: &mut CommandEncoder, _view: &TextureView) {}
 }
