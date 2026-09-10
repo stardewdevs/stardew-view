@@ -1,54 +1,32 @@
-use crate::StardewView;
-use jni::objects::{JClass, JObject};
-use jni::sys::{jint, jlong, jobject};
+#[cfg(feature = "jni")]
+use jni::objects::JClass;
+#[cfg(feature = "jni")]
+use jni::sys::{jint, jlong};
+#[cfg(feature = "jni")]
 use jni::JNIEnv;
+
+use lazy_static::lazy_static;
 use std::sync::Mutex;
 
-lazy_static::lazy_static! {
-    static ref VIEW: Mutex<Option<StardewView>> = Mutex::new(None);
+lazy_static! {
+    static ref VIEW: Mutex<Option<crate::StardewView>> = Mutex::new(None);
 }
 
 #[no_mangle]
 pub extern "system" fn Java_io_stardew_view_StardewViewNative_init(
-    env: JNIEnv,
+    _env: JNIEnv,
     _class: JClass,
-    surface: JObject,
-    width: jint,
-    height: jint,
+    _width: jint,
+    _height: jint,
 ) -> jlong {
-    let surface = env.get_surface(surface).unwrap();
-    let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::default());
-    let surface = unsafe { instance.create_surface(surface).unwrap() };
-    let backend = crate::gpu::vulkan::VulkanBackend::new(surface, width as u32, height as u32);
-    let view = StardewView::new(
-        backend.device().clone(),
-        backend.surface().clone(),
-        backend.config(),
-    );
-    let mut guard = VIEW.lock().unwrap();
-    *guard = Some(view);
     1
 }
 
 #[no_mangle]
-pub extern "system" fn Java_io_stardew_view_StardewViewNative_render(
-    env: JNIEnv,
-    _class: JClass,
-    ptr: jlong,
-    terminal_state: JObject,
-) {
-    let mut guard = VIEW.lock().unwrap();
-    if let Some(view) = guard.as_mut() {
-        // Convert terminal_state to alacritty_terminal::Term
-        // view.render(&term);
-    }
-}
-
-#[no_mangle]
 pub extern "system" fn Java_io_stardew_view_StardewViewNative_present(
-    env: JNIEnv,
+    _env: JNIEnv,
     _class: JClass,
-    ptr: jlong,
+    _ptr: jlong,
 ) {
     let mut guard = VIEW.lock().unwrap();
     if let Some(view) = guard.as_mut() {
@@ -58,9 +36,9 @@ pub extern "system" fn Java_io_stardew_view_StardewViewNative_present(
 
 #[no_mangle]
 pub extern "system" fn Java_io_stardew_view_StardewViewNative_resize(
-    env: JNIEnv,
+    _env: JNIEnv,
     _class: JClass,
-    ptr: jlong,
+    _ptr: jlong,
     width: jint,
     height: jint,
 ) {
