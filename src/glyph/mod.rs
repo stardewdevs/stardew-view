@@ -1,4 +1,3 @@
-use crossfont::{Font, FontDesc, Glyph};
 use glyphon::{FontSystem, SwashCache};
 
 pub struct GlyphCache {
@@ -14,12 +13,15 @@ impl GlyphCache {
         }
     }
 
-    pub fn load_font(&mut self, desc: FontDesc) {
-        self.font_system.add_font(desc);
+    pub fn load_font(&mut self, data: &[u8]) {
+        self.font_system.db_mut().load_font_data(data.to_vec());
     }
 
-    pub fn rasterize(&mut self, glyph: &Glyph) -> Option<glyphon::Glyph> {
-        let font = self.font_system.get_font(&glyph.font_id).unwrap();
-        Some(glyphon::Glyph::new(font, glyph))
+    pub fn font_system_mut(&mut self) -> &mut FontSystem {
+        &mut self.font_system
+    }
+
+    pub fn swash_cache_mut(&mut self) -> &mut SwashCache {
+        &mut self.swash_cache
     }
 }
