@@ -10,10 +10,9 @@ homepage = "https://github.com/stardewdevs/stardew-view"
 documentation = "https://github.com/stardewdevs/stardew-view/docs"
 
 [dependencies]
-alacritty_terminal = "0.25.0"
+stardew-emulator = { git = "https://github.com/stardewdevs/stardew-emulator", default-features = false }
 wgpu = "0.19.3"
-glyphon = "0.6.0"
-crossfont = "0.8.0"
+glyphon = "0.5.0"
 glam = "0.29.0"
 anyhow = "1.0.95"
 thiserror = "2.0.11"
