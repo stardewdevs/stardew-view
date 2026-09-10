@@ -1,25 +1,14 @@
+use wgpu::{CommandEncoder, Device, Queue, TextureView};
 use alacritty_terminal::Term;
-use sugarloaf::Sugarloaf;
-use wgpu::{CommandEncoder, Device, TextureView};
 
-pub struct Renderer {
-    sugarloaf: Sugarloaf,
-}
+pub struct Renderer;
 
 impl Renderer {
-    pub fn new(device: Device) -> Self {
-        let sugarloaf = Sugarloaf::new(&device);
-        Self { sugarloaf }
+    pub fn new(_device: &Device, _queue: &Queue) -> Self {
+        Self
     }
 
-    pub fn render(&mut self, terminal: &Term) {
-        let grid = terminal.grid();
-        let cursor = terminal.cursor();
-        let colors = terminal.colors();
-        self.sugarloaf.render_grid(grid, cursor, colors);
-    }
+    pub fn render(&mut self, _terminal: &Term<()>) {}
 
-    pub fn draw(&mut self, encoder: &mut CommandEncoder, view: &TextureView) {
-        self.sugarloaf.draw(encoder, view);
-    }
+    pub fn draw(&mut self, _encoder: &mut CommandEncoder, _view: &TextureView) {}
 }
