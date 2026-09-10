@@ -10,34 +10,30 @@ homepage = "https://github.com/stardewdevs/stardew-view"
 documentation = "https://github.com/stardewdevs/stardew-view/docs"
 
 [dependencies]
-alacritty_terminal = "0.25"
-stardew-emulator = { git = "https://github.com/stardewdevs/stardew-emulator", optional = true }
-sugarloaf = "0.5.27"
+alacritty_terminal = "0.25.0"
 wgpu = "0.19.3"
-crossfont = "0.9"
-glyphon = "0.6"
-glam = "0.29"
-cgmath = "0.18"
-jni = { version = "0.21", optional = true }
-jni-sys = { version = "0.3", optional = true }
-anyhow = "1.0"
-thiserror = "1.0"
-log = "0.4"
-env_logger = "0.11"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-toml = "0.8"
-tokio = { version = "1.0", features = ["full"] }
+glyphon = "0.6.0"
+crossfont = "0.8.0"
+glam = "0.29.0"
+anyhow = "1.0.95"
+thiserror = "2.0.11"
+log = "0.4.26"
+env_logger = "0.11.6"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.138"
+toml = "0.8.20"
+lazy_static = "1.5.0"
+jni = { version = "0.21.0", optional = true }
+jni-sys = { version = "0.3.0", optional = true }
 
 [target.'cfg(target_os = "android")'.dependencies]
-ndk = { version = "0.9", optional = true }
-ndk-sys = { version = "0.6", optional = true }
-glue = { version = "0.3", optional = true }
-android-activity = { version = "0.5", optional = true }
+ndk = { version = "0.9.0", optional = true }
+ndk-sys = { version = "0.6.0", optional = true }
+glue = { version = "0.3.0", optional = true }
+android-activity = { version = "0.5.0", optional = true }
 
 [dev-dependencies]
-tempfile = "3"
-criterion = "0.5"
+tempfile = "3.14.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -45,4 +41,5 @@ crate-type = ["cdylib", "rlib"]
 [features]
 default = ["jni"]
 jni = ["dep:jni"]
-android = ["ndk", "ndk-sys", "glue", "android-activity"]
+android = ["dep:ndk", "dep:ndk-sys", "dep:glue", "dep:android-activity"]
+metal = []
